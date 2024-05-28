@@ -30,8 +30,6 @@ const Register = ({navigation}: Props) => {
     setLoading(true);
     createUserWithEmailAndPassword(fireAuth, form.email, form.password)
       .then(response => {
-        setLoading(false);
-        //setForm('reset');
         const datauser = {
           fullName: form.fullName,
           profession: form.profession,
@@ -39,6 +37,8 @@ const Register = ({navigation}: Props) => {
         };
         const userRef = ref(fireDB, `user/${response.user.uid}`);
         set(userRef, datauser);
+        setLoading(false);
+        setForm('reset');
       })
       .catch(error => {
         setLoading(false);
