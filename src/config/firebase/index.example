@@ -1,0 +1,24 @@
+import {initializeApp} from 'firebase/app';
+import {initializeAuth, getReactNativePersistence} from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import {getDatabase} from 'firebase/database';
+
+const firebaseConfig = {
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+};
+
+const Fire = initializeApp(firebaseConfig);
+
+const fireAuth = initializeAuth(Fire, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
+
+const fireDB = getDatabase(Fire);
+
+export {fireAuth, fireDB};
