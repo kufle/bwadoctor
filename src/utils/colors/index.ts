@@ -7,6 +7,7 @@ const baseColors: any = {
   grey1: '#7D8797',
   grey2: '#E9E9E9',
   grey3: '#EDEEF0',
+  grey4: '#B1B7C2',
   white: 'white',
   black: 'black',
   black2: 'rgba(0, 0, 0, 0.5)',
@@ -32,6 +33,10 @@ export const colors: any = {
     secondary: {
       background: baseColors.white,
       text: baseColors.black,
+    },
+    disable: {
+      background: baseColors.grey3,
+      text: baseColors.grey4,
     },
   },
   border: baseColors.grey2,

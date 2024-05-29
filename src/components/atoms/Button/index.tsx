@@ -1,4 +1,4 @@
-import {Text, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
+import {Text, TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 import IconOnly from './IconOnly';
@@ -12,13 +12,21 @@ interface Props {
   disable?: boolean;
 }
 
-const Button = ({type, title, onPress, icon, disable}: Props) => {
+const Button = ({type, title, onPress, icon, disable = false}: Props) => {
   if (type === 'btn-icon-send') {
     return <BtnIconSend disable={disable || false} />;
   }
 
   if (type === 'icon-only') {
     return <IconOnly icon={icon || 'back-dark'} onPress={onPress} />;
+  }
+
+  if (disable) {
+    return (
+      <View style={styles.disableBg()}>
+        <Text style={styles.disableText()}>{title}</Text>
+      </View>
+    );
   }
 
   return (
@@ -47,5 +55,16 @@ const styles = {
         ? colors.button.secondary.text
         : colors.button.primary.text,
     fontFamily: fonts.primary[600],
+  }),
+  disableBg: (): ViewStyle => ({
+    backgroundColor: colors.button.disable.background,
+    paddingVertical: 10,
+    borderRadius: 10,
+  }),
+  disableText: (): TextStyle => ({
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: fonts.primary[600],
+    color: colors.button.disable.text,
   }),
 };

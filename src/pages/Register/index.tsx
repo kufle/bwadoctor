@@ -1,7 +1,7 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {Button, Gap, Header, Input, Loading} from '../../components';
-import {colors, useForm} from '../../utils';
+import {colors, storeData, useForm} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {fireAuth, fireDB} from '../../config';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
@@ -34,11 +34,18 @@ const Register = ({navigation}: Props) => {
           fullName: form.fullName,
           profession: form.profession,
           email: form.email,
+          uid: response.user.uid,
         };
-        const userRef = ref(fireDB, `user/${response.user.uid}`);
-        set(userRef, datauser);
+        //Save to Firebase
+        const userDoc = ref(fireDB, `user/${response.user.uid}`);
+        set(userDoc, datauser);
+        //Save to localStorage
+        storeData('user', form);
+        //Reset form
         setLoading(false);
         setForm('reset');
+
+        navigation.navigate('UploadPhoto');
       })
       .catch(error => {
         setLoading(false);
@@ -81,11 +88,7 @@ const Register = ({navigation}: Props) => {
               secureTextEntry
             />
             <Gap height={40} />
-            <Button
-              title="Continue"
-              onPress={onContinue}
-              //onPress={() => navigation.navigate('UploadPhoto')}
-            />
+            <Button title="Continue" onPress={onContinue} />
           </View>
         </ScrollView>
       </View>

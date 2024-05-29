@@ -1,9 +1,11 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
 import {Button, Gap, Header, Link} from '../../components';
-import {IconAddPhoto, ILNullPhoto} from '../../assets';
+import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
 import {colors, fonts} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {showMessage} from 'react-native-flash-message';
 
 type RootStackParamList = {
   MainApp: undefined;
@@ -14,21 +16,48 @@ interface Props {
 }
 
 const UploadPhoto = ({navigation}: Props) => {
+  const [hasPhoto, setHasPhoto] = useState<boolean>(false);
+  const [photo, setPhoto] = useState(ILNullPhoto);
+  const getImageFromGallery = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+    });
+
+    console.log('result', result);
+    if (result.didCancel) {
+      showMessage({
+        message: 'Oops, it seems you did not select the photos',
+        type: 'danger',
+      });
+    } else {
+      const source = {uri: result.assets![0]?.uri};
+      setPhoto(source);
+      setHasPhoto(true);
+    }
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Upload photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <View style={styles.avatarWrapper}>
-            <Image source={ILNullPhoto} style={styles.avatar} />
-            <IconAddPhoto style={styles.avatarActionIcon} />
-          </View>
+          <TouchableOpacity
+            style={styles.avatarWrapper}
+            onPress={getImageFromGallery}>
+            <Image source={photo} style={styles.avatar} />
+            {hasPhoto ? (
+              <IconRemovePhoto style={styles.avatarActionIcon} />
+            ) : (
+              <IconAddPhoto style={styles.avatarActionIcon} />
+            )}
+          </TouchableOpacity>
           <Text style={styles.name}>Irawan</Text>
           <Text style={styles.profession}>Product manager</Text>
         </View>
         <View>
           <Button
             title="Upload and Continue"
+            disable={!hasPhoto}
             onPress={() => navigation.replace('MainApp')}
           />
           <Gap height={30} />
@@ -65,6 +94,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 110,
     height: 110,
+    borderRadius: 110 / 2,
   },
   avatarWrapper: {
     width: 130,
