@@ -7,10 +7,11 @@ import {fireAuth, fireDB} from '../../config';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import {showMessage} from 'react-native-flash-message';
 import {ref, set} from 'firebase/database';
+import {UserType} from '../../types';
 
 type RootStackParamList = {
   Register: undefined;
-  UploadPhoto: undefined;
+  UploadPhoto: UserType;
 };
 
 type Props = {
@@ -37,7 +38,7 @@ const Register = ({navigation}: Props) => {
           uid: response.user.uid,
         };
         //Save to Firebase
-        const userDoc = ref(fireDB, `user/${response.user.uid}`);
+        const userDoc = ref(fireDB, `users/${response.user.uid}`);
         set(userDoc, datauser);
         //Save to localStorage
         storeData('user', form);
@@ -45,7 +46,7 @@ const Register = ({navigation}: Props) => {
         setLoading(false);
         setForm('reset');
 
-        navigation.navigate('UploadPhoto');
+        navigation.replace('UploadPhoto', datauser);
       })
       .catch(error => {
         setLoading(false);

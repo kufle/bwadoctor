@@ -1,29 +1,43 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {Button, Gap, Header, Link} from '../../components';
-import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
-import {colors, fonts} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
+import {RouteProp} from '@react-navigation/native';
+import {Button, Gap, Header, Link, Loading} from '../../components';
+import {IconAddPhoto, IconRemovePhoto, ILNullPhoto} from '../../assets';
+import {colors, fonts, storeData} from '../../utils';
+import {UserType} from '../../types';
+import {ref, update} from 'firebase/database';
+import {fireDB} from '../../config';
 
 type RootStackParamList = {
   MainApp: undefined;
+  UploadPhoto: UserType;
 };
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList>;
+  route: RouteProp<RootStackParamList, 'UploadPhoto'>;
 }
 
-const UploadPhoto = ({navigation}: Props) => {
+const UploadPhoto = ({navigation, route}: Props) => {
+  const {fullName, profession, uid} = route.params;
   const [hasPhoto, setHasPhoto] = useState<boolean>(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
+  const [photoBase64, setPhotoBase64] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const getImageFromGallery = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
+      includeBase64: true,
+      quality: 1,
+      maxWidth: 200,
+      maxHeight: 200,
     });
 
-    console.log('result', result);
+    //console.log('result', result);
     if (result.didCancel) {
       showMessage({
         message: 'Oops, it seems you did not select the photos',
@@ -33,43 +47,68 @@ const UploadPhoto = ({navigation}: Props) => {
       const source = {uri: result.assets![0]?.uri};
       setPhoto(source);
       setHasPhoto(true);
+      const base64Photo = `data:${result.assets![0].type};base64, ${
+        result.assets![0]?.base64
+      }`;
+      setPhotoBase64(base64Photo);
     }
   };
 
+  const handleUploadAndContinue = () => {
+    setLoading(true);
+    update(ref(fireDB, `users/${uid}`), {photo: photoBase64})
+      .then(() => {
+        // Set image base64 to localStorage
+        const data = {...route.params};
+        data.photo = photoBase64;
+        storeData('user', data);
+        //Set loading and redirect to mainapp
+        setLoading(false);
+        navigation.replace('MainApp');
+      })
+      .catch(e => {
+        setLoading(false);
+        console.log(e);
+      });
+  };
+
   return (
-    <View style={styles.page}>
-      <Header title="Upload photo" />
-      <View style={styles.content}>
-        <View style={styles.profile}>
-          <TouchableOpacity
-            style={styles.avatarWrapper}
-            onPress={getImageFromGallery}>
-            <Image source={photo} style={styles.avatar} />
-            {hasPhoto ? (
-              <IconRemovePhoto style={styles.avatarActionIcon} />
-            ) : (
-              <IconAddPhoto style={styles.avatarActionIcon} />
-            )}
-          </TouchableOpacity>
-          <Text style={styles.name}>Irawan</Text>
-          <Text style={styles.profession}>Product manager</Text>
-        </View>
-        <View>
-          <Button
-            title="Upload and Continue"
-            disable={!hasPhoto}
-            onPress={() => navigation.replace('MainApp')}
-          />
-          <Gap height={30} />
-          <Link
-            title="Skip for this"
-            fontSize={16}
-            align="center"
-            onPress={() => navigation.replace('MainApp')}
-          />
+    <>
+      <View style={styles.page}>
+        <Header title="Upload photo" />
+        <View style={styles.content}>
+          <View style={styles.profile}>
+            <TouchableOpacity
+              style={styles.avatarWrapper}
+              onPress={getImageFromGallery}>
+              <Image source={photo} style={styles.avatar} />
+              {hasPhoto ? (
+                <IconRemovePhoto style={styles.avatarActionIcon} />
+              ) : (
+                <IconAddPhoto style={styles.avatarActionIcon} />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.name}>{fullName}</Text>
+            <Text style={styles.profession}>{profession}</Text>
+          </View>
+          <View>
+            <Button
+              title="Upload and Continue"
+              disable={!hasPhoto}
+              onPress={handleUploadAndContinue}
+            />
+            <Gap height={30} />
+            <Link
+              title="Skip for this"
+              fontSize={16}
+              align="center"
+              onPress={() => navigation.replace('MainApp')}
+            />
+          </View>
         </View>
       </View>
-    </View>
+      {loading && <Loading />}
+    </>
   );
 };
 

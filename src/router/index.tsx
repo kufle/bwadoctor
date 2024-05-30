@@ -17,8 +17,15 @@ import {
   UserProfile,
 } from '../pages';
 import {BottomNavigator} from '../components';
+import {UserType} from '../types';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  [key: string]: object | undefined;
+  UploadPhoto: UserType;
+  // Rute lain bisa ditambahkan di sini
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
 
 // Bottom Navigation

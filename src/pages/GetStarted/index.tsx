@@ -26,7 +26,7 @@ const GetStarted = ({navigation}: Props) => {
       <View>
         <Button
           title="Get Started"
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.replace('Register')}
         />
         <Gap height={16} />
         <Button
