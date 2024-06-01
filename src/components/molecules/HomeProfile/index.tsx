@@ -17,7 +17,6 @@ const HomeProfile: React.FC<Props> = ({onPress}) => {
     getData('user').then(res => {
       const data = res;
       data.photo = {uri: res.photo};
-      console.log(data);
       setProfile(data);
     });
   }, []);

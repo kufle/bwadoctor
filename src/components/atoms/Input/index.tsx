@@ -7,6 +7,7 @@ interface Props {
   value?: string;
   onChangeText?: (e: any) => void;
   secureTextEntry?: boolean;
+  canEdit?: boolean;
 }
 
 const Input = ({
@@ -14,6 +15,7 @@ const Input = ({
   value,
   onChangeText,
   secureTextEntry = false,
+  canEdit = true,
 }: Props) => {
   const [border, setBorder] = useState(colors.border);
   const onFocusForm = () => {
@@ -34,6 +36,7 @@ const Input = ({
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
+        editable={canEdit}
       />
     </View>
   );

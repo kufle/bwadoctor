@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Gap, Header, List, Profile} from '../../components';
-import {colors} from '../../utils';
+import {colors, getData} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -14,11 +14,29 @@ interface Props {
 }
 
 const UserProfile = ({navigation}: Props) => {
+  const [profile, setProfile] = useState({
+    fullName: '',
+    profession: '',
+    photo: '',
+  });
+
+  useEffect(() => {
+    getData('user').then(res => {
+      const data = res;
+      data.photo = {uri: data.photo};
+      setProfile(data);
+    });
+  }, []);
+
   return (
     <View style={styles.page}>
       <Header title="Profile" onPress={() => navigation.goBack()} />
       <Gap height={10} />
-      <Profile name="Irawan" desc="Product designer" />
+      <Profile
+        name={profile.fullName}
+        desc={profile.profession}
+        photo={profile.photo}
+      />
       <Gap height={14} />
       <List
         title="Edit Profile"
@@ -28,13 +46,13 @@ const UserProfile = ({navigation}: Props) => {
         onPress={() => navigation.navigate('UpdateProfile')}
       />
       <List
-        title="Edit Profile"
+        title="Language"
         desc="last update yesterday"
         iconAction="next"
         icon="language"
       />
       <List
-        title="Edit Profile"
+        title="Give us rate"
         desc="last update yesterday"
         iconAction="next"
         icon="rate"

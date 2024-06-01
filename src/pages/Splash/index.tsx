@@ -3,10 +3,13 @@ import {StyleSheet, Text, View} from 'react-native';
 import {ILLogo} from '../../assets';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {colors, fonts} from '../../utils';
+import {onAuthStateChanged} from 'firebase/auth';
+import {fireAuth} from '../../config';
 
 type RootStackParamList = {
   Splash: undefined;
   GetStarted: undefined;
+  MainApp: undefined;
 };
 
 type Props = {
@@ -16,7 +19,13 @@ type Props = {
 const Splash = ({navigation}: Props) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('GetStarted');
+      onAuthStateChanged(fireAuth, user => {
+        if (user) {
+          navigation.replace('MainApp');
+        } else {
+          navigation.replace('GetStarted');
+        }
+      });
     }, 3000);
   }, [navigation]);
 

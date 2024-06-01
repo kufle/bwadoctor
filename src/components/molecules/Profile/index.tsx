@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {IconRemovePhoto, ILNullPhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
@@ -6,16 +6,26 @@ import {colors, fonts} from '../../../utils';
 interface Props {
   name?: string;
   desc?: string;
-  isIcon?: boolean;
+  photo?: string;
+  isUpload?: boolean;
+  onPress?: () => void;
 }
 
-const Profile = ({name, desc, isIcon = false}: Props) => {
+const Profile = ({name, desc, photo, isUpload = false, onPress}: Props) => {
   return (
     <View style={styles.container}>
-      <View style={styles.borderProfile}>
-        <Image source={ILNullPhoto} style={styles.avatar} />
-        {isIcon && <IconRemovePhoto style={styles.icon} />}
-      </View>
+      {isUpload ? (
+        <TouchableOpacity onPress={onPress} style={styles.borderProfile}>
+          <Image source={photo ? photo : ILNullPhoto} style={styles.avatar} />
+          {isUpload && <IconRemovePhoto style={styles.icon} />}
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.borderProfile}>
+          <Image source={photo ? photo : ILNullPhoto} style={styles.avatar} />
+          {isUpload && <IconRemovePhoto style={styles.icon} />}
+        </View>
+      )}
+
       {name && <Text style={styles.name}>{name}</Text>}
       {desc && <Text style={styles.desc}>{desc}</Text>}
     </View>

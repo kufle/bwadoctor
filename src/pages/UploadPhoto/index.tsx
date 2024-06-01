@@ -32,7 +32,7 @@ const UploadPhoto = ({navigation, route}: Props) => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
       includeBase64: true,
-      quality: 1,
+      quality: 0.7,
       maxWidth: 200,
       maxHeight: 200,
     });
