@@ -5,3 +5,8 @@ export interface UserType {
   uid: string;
   photo?: string;
 }
+
+export interface AccountSlice {
+  loading: boolean;
+  name: string;
+}

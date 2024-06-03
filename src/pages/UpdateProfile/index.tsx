@@ -7,7 +7,6 @@ import {ref, update} from 'firebase/database';
 import {fireAuth, fireDB} from '../../config';
 import {showMessage} from 'react-native-flash-message';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {ILNullPhoto} from '../../assets';
 import {
   EmailAuthProvider,
   onAuthStateChanged,
@@ -32,7 +31,7 @@ const UpdateProfile = ({navigation}: Props) => {
     email: '',
   });
 
-  const [photo, setPhoto] = useState(ILNullPhoto);
+  const [photo, setPhoto] = useState<any>(null);
   const [photoBase64, setPhotoBase64] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -41,8 +40,8 @@ const UpdateProfile = ({navigation}: Props) => {
   useEffect(() => {
     getData('user').then(res => {
       const data = res;
-      res.photo = res?.photo?.length > 1 ? res.photo : ILNullPhoto;
-      setPhoto({uri: res.photo});
+      res.photo = res?.photo?.length > 1 ? {uri: res.photo} : null;
+      setPhoto(res.photo);
       setPhotoBase64(res.photo);
       setProfile(data);
     });
@@ -131,6 +130,8 @@ const UpdateProfile = ({navigation}: Props) => {
     setLoading(true);
     const data = profile;
     data.photo = photoBase64;
+    console.log(photoBase64);
+    console.log(data);
     update(ref(fireDB, `users/${profile.uid}`), data)
       .then(() => {
         showMessage({

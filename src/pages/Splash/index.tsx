@@ -18,15 +18,17 @@ type Props = {
 
 const Splash = ({navigation}: Props) => {
   useEffect(() => {
-    setTimeout(() => {
-      onAuthStateChanged(fireAuth, user => {
+    const unsubscribe = onAuthStateChanged(fireAuth, user => {
+      setTimeout(() => {
         if (user) {
           navigation.replace('MainApp');
         } else {
           navigation.replace('GetStarted');
         }
-      });
-    }, 3000);
+      }, 3000);
+    });
+
+    return () => unsubscribe();
   }, [navigation]);
 
   return (

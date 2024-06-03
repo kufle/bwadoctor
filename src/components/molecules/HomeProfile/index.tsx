@@ -2,6 +2,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {ILNullPhoto} from '../../../assets';
 import {colors, fonts, getData} from '../../../utils';
+import {useIsFocused} from '@react-navigation/native';
 
 interface Props {
   onPress?: () => void;
@@ -12,14 +13,21 @@ const HomeProfile: React.FC<Props> = ({onPress}) => {
     fullName: '',
     profession: '',
   });
-
+  const isFocused = useIsFocused();
   useEffect(() => {
-    getData('user').then(res => {
-      const data = res;
-      data.photo = {uri: res.photo};
-      setProfile(data);
-    });
-  }, []);
+    if (isFocused) {
+      getData('user').then(res => {
+        const data = res;
+        if (res.photo) {
+          data.photo = {uri: res.photo};
+        } else {
+          data.photo = ILNullPhoto;
+        }
+        setProfile(data);
+        console.log('home');
+      });
+    }
+  }, [isFocused]);
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
