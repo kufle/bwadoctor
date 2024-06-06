@@ -1,6 +1,6 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
-import {Button, Gap, Header, Input, Loading} from '../../components';
+import {Button, Gap, Header, Input, Link, Loading} from '../../components';
 import {colors, storeData, useForm} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {fireAuth, fireDB} from '../../config';
@@ -12,6 +12,8 @@ import {UserType} from '../../types';
 type RootStackParamList = {
   Register: undefined;
   UploadPhoto: UserType;
+  Login: undefined;
+  RegisterDoctor: undefined;
 };
 
 type Props = {
@@ -36,12 +38,13 @@ const Register = ({navigation}: Props) => {
           profession: form.profession,
           email: form.email,
           uid: response.user.uid,
+          role: 'user',
         };
         //Save to Firebase
         const userDoc = ref(fireDB, `users/${response.user.uid}`);
         set(userDoc, datauser);
         //Save to localStorage
-        storeData('user', form);
+        storeData('user', datauser);
         //Reset form
         setLoading(false);
         setForm('reset');
@@ -54,7 +57,7 @@ const Register = ({navigation}: Props) => {
           message: error.message,
           type: 'danger',
         });
-        console.log(error);
+        //console.log(error);
       });
   };
 
@@ -90,6 +93,20 @@ const Register = ({navigation}: Props) => {
             />
             <Gap height={40} />
             <Button title="Continue" onPress={onContinue} />
+            <Gap height={40} />
+            <Link
+              title="Already have account ? Login here"
+              fontSize={16}
+              align="center"
+              onPress={() => navigation.replace('Login')}
+            />
+            <Gap height={40} />
+            <Link
+              title="Register Doctor"
+              fontSize={16}
+              align="center"
+              onPress={() => navigation.navigate('RegisterDoctor')}
+            />
           </View>
         </ScrollView>
       </View>

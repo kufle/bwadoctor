@@ -1,5 +1,6 @@
 import {
   Image,
+  ImageSourcePropType,
   ImageStyle,
   Text,
   TextStyle,
@@ -15,10 +16,11 @@ interface Props {
   title: string;
   onPress?: () => void;
   type?: string;
-  showDetail?: boolean;
+  desc?: string;
+  photo?: ImageSourcePropType | null;
 }
 
-const Header = ({onPress, title, type, showDetail}: Props) => {
+const Header = ({onPress, title, type, desc, photo}: Props) => {
   return (
     <View style={styleContainer.container(type)}>
       <View style={styleContainer.icon()}>
@@ -30,12 +32,13 @@ const Header = ({onPress, title, type, showDetail}: Props) => {
       </View>
       <View>
         <Text style={styleContainer.text(type)}>{title}</Text>
-        {showDetail && (
-          <Text style={styleContainer.desc(type)}>Mugiwara Doctor</Text>
-        )}
+        {desc && <Text style={styleContainer.desc(type)}>{desc}</Text>}
       </View>
-      {showDetail && (
-        <Image style={styleContainer.avatar()} source={ILNullPhoto} />
+      {photo && (
+        <Image
+          style={styleContainer.avatar()}
+          source={photo ? photo : ILNullPhoto}
+        />
       )}
     </View>
   );
@@ -59,6 +62,7 @@ const styleContainer = {
     fontFamily: fonts.primary[600],
     color: type === 'dark' ? colors.white : colors.text.primary,
     fontSize: 20,
+    textTransform: 'capitalize',
   }),
   desc: (type: string | undefined): TextStyle => ({
     fontSize: 14,
@@ -66,6 +70,7 @@ const styleContainer = {
     marginTop: 6,
     textAlign: 'center',
     color: type === 'dark' ? colors.text.subTitle : colors.text.primary,
+    textTransform: 'capitalize',
   }),
   icon: (): ViewStyle => ({
     position: 'absolute',
@@ -76,5 +81,6 @@ const styleContainer = {
     height: 46,
     position: 'absolute',
     right: 16,
+    borderRadius: 46 / 2,
   }),
 };

@@ -14,10 +14,11 @@ import {
   IconLanguage,
   IconNext,
   IconRate,
+  ILNullPhoto,
 } from '../../../assets';
 
 interface Props {
-  picture?: ImageSourcePropType;
+  picture?: ImageSourcePropType | null;
   title: string;
   desc?: string;
   iconAction?: string;
@@ -55,7 +56,10 @@ const List = ({picture, title, desc, iconAction, icon, onPress}: Props) => {
       {icon ? (
         <Icon icon={icon} />
       ) : (
-        <Image source={picture} style={styles.picture} />
+        <Image
+          source={picture ? picture : ILNullPhoto}
+          style={styles.picture}
+        />
       )}
       <View style={styles.wrapper}>
         <Text style={styles.title}>{title}</Text>

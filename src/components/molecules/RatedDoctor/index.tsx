@@ -7,20 +7,20 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {IconStar} from '../../../assets';
+import {IconStar, ILNullPhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 interface Props {
   name: string;
   desc: string;
-  avatar: ImageSourcePropType;
+  avatar: ImageSourcePropType | null;
   onPress?: () => void;
 }
 
-const RatedDoctor = ({name, desc, avatar, onPress}: Props) => {
+const RatedDoctor: React.FC<Props> = ({name, desc, avatar, onPress}) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image style={styles.avatar} source={avatar} />
+      <Image style={styles.avatar} source={avatar ? avatar : ILNullPhoto} />
       <View style={styles.profile}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.category}>{desc}</Text>

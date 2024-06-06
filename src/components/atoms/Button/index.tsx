@@ -14,7 +14,7 @@ interface Props {
 
 const Button = ({type, title, onPress, icon, disable = false}: Props) => {
   if (type === 'btn-icon-send') {
-    return <BtnIconSend disable={disable || false} />;
+    return <BtnIconSend disable={disable || false} onPress={onPress} />;
   }
 
   if (type === 'icon-only') {

@@ -130,8 +130,8 @@ const UpdateProfile = ({navigation}: Props) => {
     setLoading(true);
     const data = profile;
     data.photo = photoBase64;
-    console.log(photoBase64);
-    console.log(data);
+    // console.log(photoBase64);
+    // console.log(data);
     update(ref(fireDB, `users/${profile.uid}`), data)
       .then(() => {
         showMessage({

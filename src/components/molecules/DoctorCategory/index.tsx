@@ -32,8 +32,8 @@ const DoctorCategory = ({category, onPress}: Props) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Icon category={category} />
-      <Text style={styles.label}>Saya butuh</Text>
-      <Text style={styles.category}>Dokter umum</Text>
+      <Text style={styles.label}>Saya Butuh</Text>
+      <Text style={styles.category}>{category}</Text>
     </TouchableOpacity>
   );
 };
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     borderRadius: 10,
     marginRight: 10,
-    width: 100,
+    width: 110,
     height: 130,
   },
   illustration: {
@@ -62,5 +62,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: fonts.primary[600],
     color: colors.text.primary,
+    textTransform: 'capitalize',
   },
 });

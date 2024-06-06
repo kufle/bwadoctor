@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {IconRemovePhoto, ILNullPhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
@@ -6,7 +13,7 @@ import {colors, fonts} from '../../../utils';
 interface Props {
   name?: string;
   desc?: string;
-  photo?: string;
+  photo?: ImageSourcePropType | null;
   isUpload?: boolean;
   onPress?: () => void;
 }

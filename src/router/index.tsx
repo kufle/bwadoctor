@@ -9,8 +9,10 @@ import {
   GetStarted,
   Hospitals,
   Login,
+  LoginDoctor,
   Messages,
   Register,
+  RegisterDoctor,
   Splash,
   UpdateProfile,
   UploadPhoto,
@@ -103,6 +105,16 @@ const Router = () => {
       <Stack.Screen
         name="UpdateProfile"
         component={UpdateProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginDoctor"
+        component={LoginDoctor}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterDoctor"
+        component={RegisterDoctor}
         options={{headerShown: false}}
       />
       <Stack.Screen

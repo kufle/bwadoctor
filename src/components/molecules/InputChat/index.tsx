@@ -3,11 +3,26 @@ import React from 'react';
 import {colors, fonts} from '../../../utils';
 import {Button} from '../../atoms';
 
-const InputChat = () => {
+type Props = {
+  value: string;
+  onChangeText: (e: any) => void;
+  onPress: () => void;
+};
+
+const InputChat = ({value, onChangeText, onPress}: Props) => {
   return (
     <View style={styles.container}>
-      <TextInput style={styles.input} placeholder="Write a message" />
-      <Button type="btn-icon-send" />
+      <TextInput
+        style={styles.input}
+        placeholder="Write a message"
+        value={value}
+        onChangeText={onChangeText}
+      />
+      <Button
+        type="btn-icon-send"
+        disable={value.length < 1}
+        onPress={onPress}
+      />
     </View>
   );
 };
@@ -18,6 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.white,
   },
   input: {
     backgroundColor: colors.disable,

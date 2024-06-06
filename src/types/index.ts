@@ -4,6 +4,12 @@ export interface UserType {
   email: string;
   uid: string;
   photo?: string;
+  specialist?: string;
+  university?: string;
+  rcnumber?: string;
+  hospitalAddress?: string;
+  gender?: string;
+  rate?: number;
 }
 
 export interface AccountSlice {

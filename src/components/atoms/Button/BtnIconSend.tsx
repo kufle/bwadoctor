@@ -1,17 +1,21 @@
-import {View, ViewStyle} from 'react-native';
+import {TouchableOpacity, ViewStyle} from 'react-native';
 import React from 'react';
 import {IconSendDark, IconSendLight} from '../../../assets';
 import {colors} from '../../../utils';
 
 interface Props {
   disable?: boolean;
+  onPress?: () => void;
 }
-const BtnIconSend = ({disable = false}: Props) => {
+const BtnIconSend = ({disable = false, onPress}: Props) => {
   return (
-    <View style={styles.container(disable)}>
+    <TouchableOpacity
+      style={styles.container(disable)}
+      onPress={onPress}
+      disabled={disable}>
       {disable && <IconSendDark />}
       {!disable && <IconSendLight />}
-    </View>
+    </TouchableOpacity>
   );
 };
 

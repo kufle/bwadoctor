@@ -4,7 +4,7 @@ import {colors, fonts} from '../../../utils';
 
 interface Props {
   title: string;
-  desc: string;
+  desc?: string;
 }
 
 const ProfileItem = ({title, desc}: Props) => {

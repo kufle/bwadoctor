@@ -3,14 +3,23 @@ import React from 'react';
 import {ILHospitalBG} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
-const NewstItem = () => {
+interface Props {
+  title: string;
+  date: string;
+  image: string;
+}
+
+const NewstItem = ({title, date, image}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Is it safe to stay at greenland?</Text>
-        <Text style={styles.date}>Today</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.date}>{date}</Text>
       </View>
-      <Image source={ILHospitalBG} style={styles.image} />
+      <Image
+        source={image ? {uri: image} : ILHospitalBG}
+        style={styles.image}
+      />
     </View>
   );
 };

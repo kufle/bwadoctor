@@ -41,7 +41,11 @@ const UserProfile = ({navigation}: Props) => {
     signOut(fireAuth)
       .then(() => {
         console.log('logout successfully');
-        navigation.replace('GetStarted');
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'GetStarted'}],
+        });
+        //navigation.replace('GetStarted');
       })
       .catch(err => {
         showMessage({
