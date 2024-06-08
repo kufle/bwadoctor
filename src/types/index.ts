@@ -12,6 +12,16 @@ export interface UserType {
   rate?: number;
 }
 
+export interface ChatItemType {
+  id: string;
+  data: {
+    chatContent: string;
+    chatDate: number;
+    chatTime: string;
+    sendBy: string;
+  };
+}
+
 export interface AccountSlice {
   loading: boolean;
   name: string;

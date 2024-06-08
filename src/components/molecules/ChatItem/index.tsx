@@ -5,6 +5,7 @@ import {
   ViewStyle,
   ImageStyle,
   TextStyle,
+  ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
@@ -12,19 +13,25 @@ import {ILNullPhoto} from '../../../assets';
 
 interface Props {
   isMe?: boolean;
+  text?: string;
+  date?: string;
+  photo?: ImageSourcePropType | null;
 }
 
-const ChatItem = ({isMe = false}: Props) => {
+const ChatItem = ({isMe = false, text, date, photo}: Props) => {
   return (
     <View style={styleContainer.container(isMe)}>
-      {!isMe && <Image style={styleContainer.avatar()} source={ILNullPhoto} />}
+      {!isMe && (
+        <Image
+          style={styleContainer.avatar()}
+          source={photo ? photo : ILNullPhoto}
+        />
+      )}
       <View style={styleContainer.chatWrapper()}>
         <View style={styleContainer.chatContent(isMe)}>
-          <Text style={styleContainer.text(isMe)}>
-            Hi Dr.Chopper, is eat orange every day is bad ?
-          </Text>
+          <Text style={styleContainer.text(isMe)}>{text}</Text>
         </View>
-        <Text style={styleContainer.date(isMe)}>4.20 AM</Text>
+        <Text style={styleContainer.date(isMe)}>{date}</Text>
       </View>
     </View>
   );

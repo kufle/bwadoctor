@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {List} from '../../components';
-import {colors, fonts} from '../../utils';
-import {ILNullPhoto} from '../../assets';
+import {colors, fonts, getData} from '../../utils';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {get, onValue, ref} from 'firebase/database';
+import {fireDB} from '../../config';
 
 type RootStackParamList = {
   Chatting: undefined;
@@ -14,37 +15,58 @@ interface Props {
 }
 
 const Messages = ({navigation}: Props) => {
-  const [doctors, setDoctors] = useState([
-    {
-      id: 1,
-      profilePict: ILNullPhoto,
-      name: 'Tony Tony Chopper',
-      chat: 'Chopper self-studied many books of new and highly effective remedies...',
-    },
-    {
-      id: 2,
-      profilePict: ILNullPhoto,
-      name: 'Trafalgar D water Law',
-      chat: 'patching up wounds from battle, and using his knowledge of medicine...',
-    },
-    {
-      id: 3,
-      profilePict: ILNullPhoto,
-      name: 'Dr Vegapunk',
-      chat: 'C A doctor who is stationed aboard a ship and offer...',
-    },
-  ]);
+  const [user, setUser] = useState<any>({});
+  const [historyChat, setHistoryChat] = useState<any[]>([]);
+
+  useEffect(() => {
+    getDataUserFromLocal();
+    const lastHistoryMessage = `messages/${user.uid}`;
+    onValue(ref(fireDB, lastHistoryMessage), async snapshot => {
+      try {
+        const dataSnapshot = snapshot.val();
+        const messageArr: any[] = [];
+
+        const promises = Object.keys(dataSnapshot).map(async itemMessage => {
+          const userCollection = `users/${dataSnapshot[itemMessage].uidOtherUser}`;
+          const fetchUserinfo = await get(ref(fireDB, userCollection));
+          const userDetail = fetchUserinfo.val();
+          messageArr.push({
+            id: itemMessage,
+            userDetail,
+            ...dataSnapshot[itemMessage],
+          });
+        });
+
+        await Promise.all(promises);
+        console.log(messageArr);
+        setHistoryChat(messageArr);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, [user.uid]);
+
+  const getDataUserFromLocal = () => {
+    getData('user').then(res => {
+      setUser(res);
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.container}>
         <Text style={styles.title}>Messages</Text>
-        {doctors.map(doctor => (
+        {historyChat.map(itemChat => (
           <List
-            key={doctor.id}
-            picture={doctor.profilePict}
-            title={doctor.name}
-            desc={doctor.chat}
-            onPress={() => navigation.navigate('Chatting')}
+            key={itemChat.id}
+            picture={
+              itemChat.userDetail.photo
+                ? {uri: itemChat.userDetail.photo}
+                : null
+            }
+            title={itemChat.userDetail.fullName}
+            desc={itemChat.lastContentChat}
+            onPress={() => navigation.navigate('Chatting', itemChat.userDetail)}
           />
         ))}
       </View>
