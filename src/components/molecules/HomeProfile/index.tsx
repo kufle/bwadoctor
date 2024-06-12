@@ -18,20 +18,19 @@ const HomeProfile: React.FC<Props> = ({onPress}) => {
     if (isFocused) {
       getData('user').then(res => {
         const data = res;
-        if (res.photo) {
-          data.photo = {uri: res.photo};
-        } else {
-          data.photo = ILNullPhoto;
-        }
+        res.photo = res?.photo?.length > 1 ? {uri: res.photo} : null;
+        data.photo = res.photo;
         setProfile(data);
-        console.log('home');
       });
     }
   }, [isFocused]);
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={profile.photo} style={styles.avatar} />
+      <Image
+        source={profile.photo ? profile.photo : ILNullPhoto}
+        style={styles.avatar}
+      />
       <View>
         <Text style={styles.name}>{profile.fullName}</Text>
         <Text style={styles.profession}>{profile.profession}</Text>

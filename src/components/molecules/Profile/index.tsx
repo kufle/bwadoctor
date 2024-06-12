@@ -13,7 +13,7 @@ import {colors, fonts} from '../../../utils';
 interface Props {
   name?: string;
   desc?: string;
-  photo?: ImageSourcePropType | null;
+  photo?: ImageSourcePropType | null | any;
   isUpload?: boolean;
   onPress?: () => void;
 }

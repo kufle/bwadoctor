@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Gap, Header, List, Profile} from '../../components';
 import {colors, getData} from '../../utils';
@@ -19,6 +19,7 @@ interface Props {
 }
 
 const UserProfile = ({navigation}: Props) => {
+  const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState({
     fullName: '',
     profession: '',
@@ -28,12 +29,14 @@ const UserProfile = ({navigation}: Props) => {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
+      setLoading(true);
       getData('user').then(res => {
         const data = res;
         data.photo = res.photo ? {uri: data.photo} : null;
         setProfile(data);
-        console.log('profile');
+        console.log(data);
       });
+      setLoading(false);
     }
   }, [isFocused]);
 
@@ -55,6 +58,9 @@ const UserProfile = ({navigation}: Props) => {
       });
   };
 
+  if (loading) {
+    return <Text>Loading</Text>;
+  }
   return (
     <View style={styles.page}>
       <Header title="Profile" onPress={() => navigation.goBack()} />
