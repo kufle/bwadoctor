@@ -32,7 +32,7 @@ const UpdateProfile = ({navigation}: Props) => {
   });
 
   const [photo, setPhoto] = useState<any>(null);
-  const [photoBase64, setPhotoBase64] = useState('');
+  const [photoBase64, setPhotoBase64] = useState<any>('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const UpdateProfile = ({navigation}: Props) => {
   useEffect(() => {
     getData('user').then(res => {
       const data = res;
-      res.photo = res?.photo?.length > 1 ? {uri: res.photo} : null;
+      res.photo = res?.photo ? {uri: res.photo} : null;
       setPhoto(res.photo);
       setPhotoBase64(res.photo);
       setProfile(data);
@@ -127,11 +127,11 @@ const UpdateProfile = ({navigation}: Props) => {
   };
 
   const updateProfile = () => {
-    setLoading(true);
+    //setLoading(true);
     const data = profile;
-    data.photo = photoBase64;
-    // console.log(photoBase64);
-    // console.log(data);
+    //Jika ada uri di image nya , maka ambil isi value dari uri nya ,
+    //biar ke database nya ga ke save tipe json { uri : photo}
+    data.photo = photoBase64?.uri ? photoBase64.uri : photoBase64;
     update(ref(fireDB, `users/${profile.uid}`), data)
       .then(() => {
         showMessage({

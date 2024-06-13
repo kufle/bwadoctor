@@ -64,7 +64,7 @@ const Register = ({navigation}: Props) => {
   return (
     <>
       <View style={styles.page}>
-        <Header title="Daftar Akun" onPress={() => navigation.goBack()} />
+        <Header title="Daftar Akun" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <Input

@@ -13,13 +13,13 @@ const HomeProfile: React.FC<Props> = ({onPress}) => {
     fullName: '',
     profession: '',
   });
+
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
       getData('user').then(res => {
         const data = res;
-        res.photo = res?.photo?.length > 1 ? {uri: res.photo} : null;
-        data.photo = res.photo;
+        data.photo = res.photo ? {uri: data.photo} : null;
         setProfile(data);
       });
     }
@@ -30,6 +30,7 @@ const HomeProfile: React.FC<Props> = ({onPress}) => {
       <Image
         source={profile.photo ? profile.photo : ILNullPhoto}
         style={styles.avatar}
+        defaultSource={ILNullPhoto}
       />
       <View>
         <Text style={styles.name}>{profile.fullName}</Text>

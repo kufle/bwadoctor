@@ -24,11 +24,13 @@ const Header = ({onPress, title, type, desc, photo}: Props) => {
   return (
     <View style={styleContainer.container(type)}>
       <View style={styleContainer.icon()}>
-        <Button
-          type="icon-only"
-          icon={type === 'dark' ? 'back-light' : 'back-dark'}
-          onPress={onPress}
-        />
+        {onPress && (
+          <Button
+            type="icon-only"
+            icon={type === 'dark' ? 'back-light' : 'back-dark'}
+            onPress={onPress}
+          />
+        )}
       </View>
       <View>
         <Text style={styleContainer.text(type)}>{title}</Text>
